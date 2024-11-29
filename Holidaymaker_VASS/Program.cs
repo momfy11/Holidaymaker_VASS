@@ -1,9 +1,15 @@
-﻿namespace Holidaymaker_VASS;
+﻿namespace app;
 
-class Program
+public class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        Database database = new Database();
+        var createUser = new CreateUser(database.Connection());
+       
+        int addressId = await createUser.AddAdress();
+        await createUser.AddUser(addressId);
+        
     }
+    
 }
