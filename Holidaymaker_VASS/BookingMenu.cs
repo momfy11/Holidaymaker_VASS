@@ -186,18 +186,11 @@ public class BookingMenu
             }
             Console.WriteLine("Select an Extra by number (or 9 to finish): ");
             string input = Console.ReadLine();
-            if (int.TryParse(input, out int number))
-            {
-                if (number == 9)
-                {
-                    break;
-                }
-                else
-                {
-                    continue;
-                }
+            if (int.TryParse(input, out int number) && number == 9)
+            { 
+                break;
             }
-            if (!int.TryParse(Console.ReadLine(), out int extraIndex) || extraIndex < 0 || extraIndex > extras.Count)
+            if (!int.TryParse(input, out int extraIndex) || extraIndex < 0 || extraIndex > extras.Count)
             {
                 Console.WriteLine("Invalid selection!");
                 continue;
@@ -207,20 +200,39 @@ public class BookingMenu
             if (selectedExtra.Name == "Full board")
             {
                 extras.RemoveAll(e => e.Name == "Breakfast");
+                extras.RemoveAll(e => e.Name == "Full board");
+                extras.RemoveAll(e => e.Name == "Half Board");
             }
-            else if (selectedExtra.Name == "All-Inclusive")
+            else if (selectedExtra.Name == "Half board")
+            {
+                extras.RemoveAll(e => e.Name == "Breakfast");
+                extras.RemoveAll(e => e.Name == "Full board");
+                extras.RemoveAll(e => e.Name == "Half board");
+            }
+            else if (selectedExtra.Name == "Breakfast")
+            {
+                extras.RemoveAll(e => e.Name == "Full board");
+                extras.RemoveAll(e => e.Name == "Half board");
+            }
+            else if (selectedExtra.Name == "ALl-inclusive")
             {
                 extras.Clear();
             }
             
             selectedExtras.Add(selectedExtra);
+            
+            Console.WriteLine("\nYour current Extras: ");
+            foreach (var sExtra in selectedExtras)
+            {
+                    Console.WriteLine($"    - {sExtra.Name} (Price: {sExtra.Price}).");
+            }
         }
         
         // Calculate Total Price
         int totalPrice = selectedRoom.Price + selectedExtras.Sum(e => e.Price);
         
         // Insert Booking
-        Console.WriteLine("\nCreating Booking");
+        Console.WriteLine($"\nCreating Booking (Your Room Number: {selectedRoom.RoomId}, Price: {totalPrice}");
         await InsertBookingAsync(selectedRoom.RoomId, DateTime.Now, DateTime.Now.AddDays(7), selectedUser.AccountId,
             totalPrice);
         
@@ -348,17 +360,24 @@ public class BookingMenu
 
     private async Task InsertGuestsAsync(string first_name, string last_name, int booker, string date_of_birth)
     {
+        try
+        {
             var cmdText =
                 "INSERT INTO guests (first_name, last_name, booker, date_of_birth) VALUES ($1, $2, $3, $4)";
-            
+
             await using (var cmd = _database.CreateCommand(cmdText))
             {
                 cmd.Parameters.AddWithValue(first_name);
                 cmd.Parameters.AddWithValue(last_name);
-                cmd.Parameters.AddWithValue( booker);
+                cmd.Parameters.AddWithValue(booker);
                 cmd.Parameters.AddWithValue(date_of_birth);
 
                 await cmd.ExecuteNonQueryAsync();
             }
+        }
+        catch (NpgsqlException npgException)
+        {
+            Console.WriteLine($"Error: {npgException}");
+        }
     }
 }
