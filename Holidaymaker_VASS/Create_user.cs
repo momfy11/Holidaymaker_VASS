@@ -89,10 +89,8 @@ public class CreateUser
         }
     }
 
-    public async Task AddGuest()
+    public async Task AddGuest(string first_name, string last_name, string date_of_birth)
     {
-        string first_name, last_name;
-        string bookerId;
         
         Console.WriteLine("Enter First Name: ");
         while (string.IsNullOrWhiteSpace(first_name = Console.ReadLine()))
@@ -109,14 +107,13 @@ public class CreateUser
         Console.WriteLine("Enter the Booker this user is connected to: ");
         if (int.TryParse(Console.ReadLine(), out int booker))
         {
-            bookerId = booker.ToString();
+            Console.WriteLine("Successfully added ID.");
         }else
         {
             Console.WriteLine("Invalid ID. Please try again with a valid Number.");
         }
 
         string inputData;
-        string date_of_birth = null;
         bool isValid = false;
         while (!isValid)
         {
@@ -140,7 +137,7 @@ public class CreateUser
         {
             cmd.Parameters.AddWithValue(first_name);
             cmd.Parameters.AddWithValue(last_name);
-            cmd.Parameters.AddWithValue(booker.ToString());
+            cmd.Parameters.AddWithValue(booker);
             cmd.Parameters.AddWithValue(date_of_birth);
             await cmd.ExecuteNonQueryAsync();
             

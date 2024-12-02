@@ -14,5 +14,5 @@ public class AccommodationModel
     public int AddressId { get; set; }
     
     public AddressModel Address { get; set; }
-    public List<ratingsModel> Ratings { get; set; } = new List<ratingsModel>();
+    public List<RatingsModel> Ratings { get; set; } = new List<RatingsModel>();
 }
