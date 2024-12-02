@@ -16,7 +16,7 @@ public class CreateUser
     {
         string street, street_nr, zipcode, city, country;
         
-        Console.WriteLine("Enter street name:");
+        Console.WriteLine("Enter street name: or type \"abort\" ");
         while (string.IsNullOrWhiteSpace(street = Console.ReadLine()))
         {
             Console.WriteLine("Street name cannot be empty. Please enter a valid street name:");
@@ -97,16 +97,6 @@ public class CreateUser
 
 /*
 
-Kör dessa tre separat för att reseta ock synka id sekvensen efter testning
-byta ut table namnet för önskad table
-
-SELECT MAX(id) FROM <table_name>;
-
-SELECT pg_get_serial_sequence('<table_name>', 'id');
-
-SELECT setval('<table_name>_id_seq', (SELECT MAX(id) FROM <table_name>));
-
-expemel
 
 NEDAN KOD BEHÖVER SÄTTAS IN I MENYN FÖR ATT SKAPA ANVÄNDARE
 
