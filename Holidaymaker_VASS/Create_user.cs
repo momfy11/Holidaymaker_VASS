@@ -92,7 +92,7 @@ public class CreateUser
     public async Task AddGuest()
     {
         string first_name, last_name;
-        int bookerId;
+        string bookerId;
         
         Console.WriteLine("Enter First Name: ");
         while (string.IsNullOrWhiteSpace(first_name = Console.ReadLine()))
@@ -109,7 +109,7 @@ public class CreateUser
         Console.WriteLine("Enter the Booker this user is connected to: ");
         if (int.TryParse(Console.ReadLine(), out int booker))
         {
-            bookerId = booker;
+            bookerId = booker.ToString();
         }else
         {
             Console.WriteLine("Invalid ID. Please try again with a valid Number.");
@@ -117,23 +117,22 @@ public class CreateUser
 
         string inputData;
         string date_of_birth = null;
-        
-        Console.WriteLine("Enter a date of birth in the format YYYY-MM-DD: ");
-        inputData = Console.ReadLine();
-        if (DateTime.TryParseExact(inputData, "YYYY-MM-DD", null, System.Globalization.DateTimeStyles.None,
-                out DateTime parsedData))
+        bool isValid = false;
+        while (!isValid)
         {
-            date_of_birth = parsedData.ToString("YYYY-MM-DD");
-            Console.WriteLine($"You entered a valid Date Of Birth: {date_of_birth}");
-        }
-        else
-        {
-            Console.WriteLine("Invalid Date format. Please use YYYY-MM-DD (e.g.. 1996-01-09).");
-        }
-
-        if (!string.IsNullOrEmpty(date_of_birth))
-        {
-            Console.WriteLine($"Stored date for later use: {date_of_birth}");
+            Console.WriteLine("Enter a date of birth in the format YYYY-MM-DD: ");
+            inputData = Console.ReadLine();
+            if (DateTime.TryParseExact(inputData, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None,
+                    out DateTime parsedData))
+            {
+                date_of_birth = parsedData.ToString("yyyy-MM-dd");
+                Console.WriteLine($"You entered a valid Date Of Birth: {date_of_birth}");
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine("Invalid Date format. Please use YYYY-MM-DD (e.g.. 1996-01-09).");
+            }
         }
         
         await using(var cmd = _database.CreateCommand("INSERT INTO guests (first_name, last_name, booker, date_of_birth)" +
@@ -141,7 +140,7 @@ public class CreateUser
         {
             cmd.Parameters.AddWithValue(first_name);
             cmd.Parameters.AddWithValue(last_name);
-            cmd.Parameters.AddWithValue(booker);
+            cmd.Parameters.AddWithValue(booker.ToString());
             cmd.Parameters.AddWithValue(date_of_birth);
             await cmd.ExecuteNonQueryAsync();
             
