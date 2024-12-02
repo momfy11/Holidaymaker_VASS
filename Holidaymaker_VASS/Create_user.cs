@@ -88,8 +88,66 @@ public class CreateUser
             Console.WriteLine("User successfully created.");
         }
     }
-    
-    
+
+    public async Task AddGuest()
+    {
+        string first_name, last_name;
+        int bookerId;
+        
+        Console.WriteLine("Enter First Name: ");
+        while (string.IsNullOrWhiteSpace(first_name = Console.ReadLine()))
+        {
+            Console.WriteLine("First Name cannot be empty. Please enter a valid first name:");
+        }
+        
+        Console.WriteLine("Enter Last Name: ");
+        while (string.IsNullOrWhiteSpace(last_name = Console.ReadLine()))
+        {
+            Console.WriteLine("Last Name cannot be empty. Please enter a valid Last Name:");
+        }
+        
+        Console.WriteLine("Enter the Booker this user is connected to: ");
+        if (int.TryParse(Console.ReadLine(), out int booker))
+        {
+            bookerId = booker;
+        }else
+        {
+            Console.WriteLine("Invalid ID. Please try again with a valid Number.");
+        }
+
+        string inputData;
+        string date_of_birth = null;
+        
+        Console.WriteLine("Enter a date of birth in the format YYYY-MM-DD: ");
+        inputData = Console.ReadLine();
+        if (DateTime.TryParseExact(inputData, "YYYY-MM-DD", null, System.Globalization.DateTimeStyles.None,
+                out DateTime parsedData))
+        {
+            date_of_birth = parsedData.ToString("YYYY-MM-DD");
+            Console.WriteLine($"You entered a valid Date Of Birth: {date_of_birth}");
+        }
+        else
+        {
+            Console.WriteLine("Invalid Date format. Please use YYYY-MM-DD (e.g.. 1996-01-09).");
+        }
+
+        if (!string.IsNullOrEmpty(date_of_birth))
+        {
+            Console.WriteLine($"Stored date for later use: {date_of_birth}");
+        }
+        
+        await using(var cmd = _database.CreateCommand("INSERT INTO guests (first_name, last_name, booker, date_of_birth)" +
+                                                      "VALUES($1, $2, $3, $4)"))
+        {
+            cmd.Parameters.AddWithValue(first_name);
+            cmd.Parameters.AddWithValue(last_name);
+            cmd.Parameters.AddWithValue(booker);
+            cmd.Parameters.AddWithValue(date_of_birth);
+            await cmd.ExecuteNonQueryAsync();
+            
+            Console.WriteLine("User successfully created.");
+        }
+    }
 }
 
 
