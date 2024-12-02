@@ -138,10 +138,11 @@ public class Accommodation
                 Console.WriteLine(" - Ratings:");
                 foreach (var rating in accommodationModel.Ratings)
                 {
-                    Console.WriteLine($" - Rating ID: {rating.RatingsId}");
-                    Console.WriteLine($" - User Account ID: {rating.AccountId}");
-                    Console.WriteLine($" - Score: {rating.Rating}");
-                    Console.WriteLine($" - Comment: {rating.Comment}");
+                    Console.WriteLine($"    - Rating ID: {rating.RatingsId}");
+                    Console.WriteLine($"    - User Account ID: {rating.AccountId}");
+                    Console.WriteLine($"    - Score: {rating.Rating}");
+                    Console.WriteLine($"    - Comment: {rating.Comment}");
+                    Console.WriteLine("");
                 }
             }
             else
@@ -167,9 +168,9 @@ public class Accommodation
         {
             foreach (var rating in accommodation.Ratings)
             {
-                Console.WriteLine($" - User Account ID: {rating.AccountId}");
-                Console.WriteLine($" - Score: {rating.Rating}");
-                Console.WriteLine($" - Comment: {rating.Comment}");
+                Console.WriteLine($"    - User Account ID: {rating.AccountId}");
+                Console.WriteLine($"    - Score: {rating.Rating}");
+                Console.WriteLine($"    - Comment: {rating.Comment}");
                 Console.WriteLine();
             }
         }
