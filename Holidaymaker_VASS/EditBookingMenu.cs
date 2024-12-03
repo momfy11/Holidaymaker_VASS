@@ -6,7 +6,6 @@ namespace Holidaymaker_VASS
 {
     public class EditBookingMenu
     {
-        // EditMenu method should be asynchronous to await SelectUser
         public static async Task EditMenu()
         {
             bool showMenu = true;
@@ -22,7 +21,6 @@ namespace Holidaymaker_VASS
                 switch (mainoption)
                 {
                     case "1":
-                        // Call SelectUser method when option 1 is selected
                         await SelectUser();
                         break;
 
@@ -36,8 +34,7 @@ namespace Holidaymaker_VASS
                 }
             }
         }
-
-        // The SelectUser method should be defined outside of the switch block
+        
         public static async Task SelectUser()
         {
             var connectionString = "Host=localhost;Username=postgres;Password=martinsson123;Database=holidaymaker_database";
