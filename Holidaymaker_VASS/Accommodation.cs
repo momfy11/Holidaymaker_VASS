@@ -17,7 +17,7 @@ public class Accommodation
     {
         var accommodations = new List<AccommodationModel>();
         var addresses = new Dictionary<int, AddressModel>();
-        var ratingsByAccomodations = new Dictionary<int, List<ratingsModel>>();
+        var ratingsByAccomodations = new Dictionary<int, List<RatingsModel>>();
         try
         {
             await using (var addressCMD = _database.CreateCommand("SELECT * FROM adresses"))
@@ -72,7 +72,7 @@ public class Accommodation
             {
                 while (await ratingsReader.ReadAsync())
                 {
-                    var rating = new ratingsModel
+                    var rating = new RatingsModel
                     {
                         AccommodationId = ratingsReader.GetInt32(0),
                         AccountId = ratingsReader.GetInt32(1),
@@ -83,7 +83,7 @@ public class Accommodation
 
                     if (!ratingsByAccomodations.ContainsKey(rating.AccommodationId))
                     {
-                        ratingsByAccomodations[rating.AccommodationId] = new List<ratingsModel>();
+                        ratingsByAccomodations[rating.AccommodationId] = new List<RatingsModel>();
                     }
                     
                     ratingsByAccomodations[rating.AccommodationId].Add(rating);

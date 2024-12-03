@@ -4,8 +4,15 @@ namespace app;
 class MainMenu
 {
 
-    public static async Task Menu(CreateUser createUser, NpgsqlDataSource dataSource)
+    public static async Task Menu(NpgsqlDataSource dataSource)
     {
+        Database database = new Database();
+        var createUser = new CreateUser(database.Connection());
+        var bookingMenu = new BookingMenu(database.Connection());
+        var searchBooking = new SearchBookingToEdit(database.Connection());
+        Accommodation accommodation = new(database.Connection());
+        SearchBookingToEdit searchBookingToEdit = new(database.Connection());
+        
         bool showMenu = true;
 
         while (showMenu)
@@ -15,6 +22,8 @@ class MainMenu
             Console.WriteLine("2) Create Booking");
             Console.WriteLine("3) Edit Booking");
             Console.WriteLine("4) View Booking");
+            Console.WriteLine("5) Search By Room");
+            Console.WriteLine("6) Accommodations Menu");
             Console.WriteLine("9) Quit");
             
             string mainoption = Console.ReadLine();
@@ -26,20 +35,21 @@ class MainMenu
                     await createUser.AddUser(addressId);
                     break;
                 case "2":
-                    //CreateBooking();
-                    Console.WriteLine("Creating a booking"); // ta bort när vi har en create booking method
+                    await bookingMenu.BookingsMenu();
                     break;
                 case "3":
-                    //EditBooking();
-                    Console.WriteLine("editing a booking"); // ta bort när vi har en edit booking method
+                    await searchBookingToEdit.EditBookingsMenu();
                     break;
                 case "4":
                     var viewBookings = new ViewBookings(dataSource);
                     await viewBookings.ShowBookings();
                     break;
                 case "5":
-                    //History();
-                    Console.WriteLine("Viewing history booking"); //ta bort när vi har en History method
+                    
+                    break;
+                case "6":
+                    var accommodationMenu = new AccommodationMenu(accommodation);
+                    await accommodationMenu.Menu();
                     break;
                 case "9":
                     showMenu = false;

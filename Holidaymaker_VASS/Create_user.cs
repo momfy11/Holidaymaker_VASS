@@ -82,25 +82,68 @@ public class CreateUser
         {
             cmd.Parameters.AddWithValue(phone);
             cmd.Parameters.AddWithValue(email);
-            cmd.Parameters.AddWithValue(adress);
+            cmd.Parameters.AddWithValue(adress );
             await cmd.ExecuteNonQueryAsync();
             
             Console.WriteLine("User successfully created.");
         }
     }
-    
-    
-    
-public async void RemoveBooking(int id)
+
+    public async Task AddGuest(string first_name, string last_name, string date_of_birth)
     {
-        await using (var cmd = _database.CreateCommand("DELETE FROM bookings WHERE id = $1"))
+        
+        Console.WriteLine("Enter First Name: ");
+        while (string.IsNullOrWhiteSpace(first_name = Console.ReadLine()))
         {
-            cmd.Parameters.AddWithValue(id);
-            int result = await cmd.ExecuteNonQueryAsync();
-            Console.WriteLine(result);
+            Console.WriteLine("First Name cannot be empty. Please enter a valid first name:");
+        }
+        
+        Console.WriteLine("Enter Last Name: ");
+        while (string.IsNullOrWhiteSpace(last_name = Console.ReadLine()))
+        {
+            Console.WriteLine("Last Name cannot be empty. Please enter a valid Last Name:");
+        }
+        
+        Console.WriteLine("Enter the Booker this user is connected to: ");
+        if (int.TryParse(Console.ReadLine(), out int booker))
+        {
+            Console.WriteLine("Successfully added ID.");
+        }else
+        {
+            Console.WriteLine("Invalid ID. Please try again with a valid Number.");
+        }
+
+        string inputData;
+        bool isValid = false;
+        while (!isValid)
+        {
+            Console.WriteLine("Enter a date of birth in the format YYYY-MM-DD: ");
+            inputData = Console.ReadLine();
+            if (DateTime.TryParseExact(inputData, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None,
+                    out DateTime parsedData))
+            {
+                date_of_birth = parsedData.ToString("yyyy-MM-dd");
+                Console.WriteLine($"You entered a valid Date Of Birth: {date_of_birth}");
+                isValid = true;
+            }
+            else
+            {
+                Console.WriteLine("Invalid Date format. Please use YYYY-MM-DD (e.g.. 1996-01-09).");
+            }
+        }
+        
+        await using(var cmd = _database.CreateCommand("INSERT INTO guests (first_name, last_name, booker, date_of_birth)" +
+                                                      "VALUES($1, $2, $3, $4)"))
+        {
+            cmd.Parameters.AddWithValue(first_name);
+            cmd.Parameters.AddWithValue(last_name);
+            cmd.Parameters.AddWithValue(booker);
+            cmd.Parameters.AddWithValue(date_of_birth);
+            await cmd.ExecuteNonQueryAsync();
+            
+            Console.WriteLine("User successfully created.");
         }
     }
-    
 }
 
 
@@ -117,4 +160,3 @@ NEDAN KOD BEHÖVER SÄTTAS IN I MENYN FÖR ATT SKAPA ANVÄNDARE
     await createUser.AddUser(addressId);
 
 */
-
