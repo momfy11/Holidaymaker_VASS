@@ -1,5 +1,5 @@
 ﻿using Npgsql;
-namespace app;
+namespace Holidaymaker_VASS;
 
 public class CreateUser
 {

@@ -1,12 +1,12 @@
 ﻿using Npgsql;
-namespace app;
+namespace Holidaymaker_VASS;
 
 public class Database
 {
     private readonly string _host = "localhost";
     private readonly string _port = "5432";
     private readonly string _username = "postgres";
-    private readonly string _password = "martinsson";
+    private readonly string _password = "martinsson123";
     private readonly string _database = "holidaymaker_database";
     // private readonly string _schema = "public";
     
