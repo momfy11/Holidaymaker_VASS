@@ -249,7 +249,7 @@ public class BookingMenu
         int totalPrice = selectedRoom.Price + selectedExtras.Sum(e => e.Price);
         
         // Insert Booking
-        Console.WriteLine($"\nCreating Booking (Your Room Number: {selectedRoom.RoomId}, Price: {totalPrice}");
+        Console.WriteLine($"\nCreating Booking (Your Accommodation: {selectedAccommodation.Name}, Room Number: {selectedRoom.RoomId}, Price: {totalPrice}");
         await InsertBookingAsync(selectedRoom.RoomId, bookingStart, bookingEnd, selectedUser.AccountId,
             totalPrice);
         
