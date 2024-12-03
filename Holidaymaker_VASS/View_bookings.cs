@@ -53,7 +53,7 @@ namespace app
 
             while (await reader.ReadAsync())
             {
-                // Replace with actual column names
+                
                 Console.WriteLine($"Booking ID: {reader["booking_id"]}, Room ID: {reader["room"]}, Email: {reader["user_email"]}");
                 Console.WriteLine(
                     $"Start: {reader["booking_start"]}, End: {reader["booking_end"]}, Total Price: {reader["total_price"]}\n");
@@ -65,14 +65,14 @@ namespace app
         {
             Console.WriteLine("Fetching archived bookings...");
 
-            // Query active bookings
+           
             await using var cmd = _database.CreateCommand("SELECT * FROM archived_bookings");
 
             await using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
             {
-                // Replace with actual column names
+                
                 Console.WriteLine($"Booking ID: {reader["booking_id"]}, Room ID: {reader["room"]}, Email: {reader["user_email"]}");
                 Console.WriteLine(
                     $"Start: {reader["booking_start"]}, End: {reader["booking_end"]}, Total Price: {reader["total_price"]}\n");
