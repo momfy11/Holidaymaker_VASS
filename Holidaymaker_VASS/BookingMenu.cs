@@ -1,7 +1,9 @@
 ﻿using System.Data;
 using System.Globalization;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using app.Classes;
+using Microsoft.VisualBasic;
 
 namespace app;
 using Npgsql;
@@ -70,7 +72,7 @@ public class BookingMenu
 
         //Booking Start
         Console.WriteLine("\nEnter the booking start date (YYYY-MM-DD): ");
-        if (!DateTime.TryParse(Console.ReadLine(), out DateTime bookingStart) ||
+        if (!DateTime.TryParse(Console.ReadLine() + " 15:00:00", out DateTime bookingStart) ||
             bookingStart < new DateTime(2024, 12, 1) || bookingStart > new DateTime(2025, 1, 31))
         {
             Console.WriteLine("Invalid Booking Start Date. It must be between 2024-12-01 and 2025-01-31.");
@@ -79,7 +81,7 @@ public class BookingMenu
         
         //Booking End
         Console.WriteLine("Enter the booking end date (YYYY-MM-DD): ");
-        if (!DateTime.TryParse(Console.ReadLine(), out DateTime bookingEnd) || bookingEnd <= bookingStart ||
+        if (!DateTime.TryParse(Console.ReadLine() + " 10:00:00", out DateTime bookingEnd) || bookingEnd <= bookingStart ||
             bookingEnd > new DateTime(2025, 1, 31))
         {
             Console.WriteLine("Invalid Booking End Date. It must be after Start Date and no later then 2025-01-31.");
@@ -250,9 +252,14 @@ public class BookingMenu
         
         // Insert Booking
         Console.WriteLine($"\nCreating Booking (Your Accommodation: {selectedAccommodation.Name}, Room Number: {selectedRoom.RoomId}, Price: {totalPrice}");
-        await InsertBookingAsync(selectedRoom.RoomId, bookingStart, bookingEnd, selectedUser.AccountId,
+        // Insert the booking
+        int bookingId = await InsertBookingAsync(selectedRoom.RoomId, bookingStart, bookingEnd, selectedUser.AccountId,
             totalPrice);
-        
+
+        if (selectedExtras.Any())
+        {
+            await InsertBookingExtrasAsync(bookingId, selectedExtras);
+        }
         foreach (var guest in guests)
         {
             await InsertGuestsAsync(guest.FirstName, guest.LastName, selectedUser.AccountId, guest.Date_Of_Birth);
@@ -310,14 +317,14 @@ public class BookingMenu
         return accommodations;
     }
 
-    private async Task<List<RoomModel>> GetAvailableRoomsAsync(int acommondation)
+    private async Task<List<RoomModel>> GetAvailableRoomsAsync(int accommodation)
     {
         var rooms = new List<RoomModel>();
 
         await using (var cmd = _database.CreateCommand(
-                         $"SELECT * FROM rooms WHERE acommondation = {acommondation} AND id NOT IN (SELECT room FROM bookings WHERE booking_end >= current_date)"))
+                         $"SELECT * FROM rooms WHERE accommodation = {accommodation} AND id NOT IN (SELECT room FROM bookings WHERE booking_end >= current_date)"))
         {
-            cmd.Parameters.AddWithValue("acommondation", acommondation);
+            cmd.Parameters.AddWithValue("accommodation", accommodation);
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
@@ -359,11 +366,11 @@ public class BookingMenu
         return extras;
     }
 
-    private async Task InsertBookingAsync( int room, DateTime startDate, DateTime endDate, int account, int totalPrice)
+    private async Task<int> InsertBookingAsync( int room, DateTime startDate, DateTime endDate, int account, int totalPrice)
     {
         await using (var cmd = _database.CreateCommand(
-                         "INSERT INTO bookings (room, bokking_start, booking_end, account, total_price)"
-                           +"VALUES ($1 , $2, $3, $4, $5)"))
+                         "INSERT INTO bookings (room, booking_start, booking_end, account, total_price)"
+                           +"VALUES ($1 , $2, $3, $4, $5) RETURNING id"))
         {
             cmd.Parameters.AddWithValue(room);
             cmd.Parameters.AddWithValue(startDate);
@@ -372,6 +379,8 @@ public class BookingMenu
             cmd.Parameters.AddWithValue(totalPrice);
 
             await cmd.ExecuteNonQueryAsync();
+            
+            return (int)await cmd.ExecuteScalarAsync();
         }
     }
 
@@ -395,6 +404,21 @@ public class BookingMenu
         catch (NpgsqlException npgException)
         {
             Console.WriteLine($"Error: {npgException}");
+        }
+    }
+
+    private async Task InsertBookingExtrasAsync(int bookingId, List<ExtraModel> selectedExtras)
+    {
+        foreach (var extra in selectedExtras)
+        {
+            await using (var cmd = _database.CreateCommand(
+                             "INSERT INTO bookingsxextras (booking_id, extras_id) VALUES ($1, $2)"))
+            {
+                cmd.Parameters.AddWithValue(bookingId);
+                cmd.Parameters.AddWithValue(extra.ExtraId);
+                await cmd.ExecuteNonQueryAsync();
+                
+            }
         }
     }
 }
