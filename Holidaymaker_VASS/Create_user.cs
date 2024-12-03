@@ -82,13 +82,24 @@ public class CreateUser
         {
             cmd.Parameters.AddWithValue(phone);
             cmd.Parameters.AddWithValue(email);
-            cmd.Parameters.AddWithValue(adress );
+            cmd.Parameters.AddWithValue(adress);
             await cmd.ExecuteNonQueryAsync();
             
             Console.WriteLine("User successfully created.");
         }
     }
     
+    
+    
+public async void RemoveBooking(int id)
+    {
+        await using (var cmd = _database.CreateCommand("DELETE FROM bookings WHERE id = $1"))
+        {
+            cmd.Parameters.AddWithValue(id);
+            int result = await cmd.ExecuteNonQueryAsync();
+            Console.WriteLine(result);
+        }
+    }
     
 }
 
@@ -106,3 +117,4 @@ NEDAN KOD BEHÖVER SÄTTAS IN I MENYN FÖR ATT SKAPA ANVÄNDARE
     await createUser.AddUser(addressId);
 
 */
+

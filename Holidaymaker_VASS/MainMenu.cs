@@ -15,7 +15,6 @@ class MainMenu
             Console.WriteLine("2) Create Booking");
             Console.WriteLine("3) Edit Booking");
             Console.WriteLine("4) View Booking");
-            Console.WriteLine("5) History");
             Console.WriteLine("9) Quit");
             
             string mainoption = Console.ReadLine();
