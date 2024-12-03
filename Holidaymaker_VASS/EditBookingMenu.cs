@@ -37,7 +37,7 @@ namespace Holidaymaker_VASS
         
         public static async Task SelectUser()
         {
-            var connectionString = "Host=localhost;Username=postgres;Password=martinsson123;Database=holidaymaker_database";
+            var connectionString = "Host=localhost;Username=postgres;Password=postgres;Database=holidaymaker_database";
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
             var dataSource = dataSourceBuilder.Build();
             
