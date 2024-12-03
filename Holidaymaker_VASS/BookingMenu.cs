@@ -286,7 +286,7 @@ public class BookingMenu
     {
         var accommodations = new List<AccommodationModel>();
 
-        await using (var cmd = _database.CreateCommand(@"SELECT * FROM accommodation"))
+        await using (var cmd = _database.CreateCommand("SELECT * FROM accommodation"))
         await using (var reader = await cmd.ExecuteReaderAsync())
         {
             while (await reader.ReadAsync())
@@ -315,7 +315,7 @@ public class BookingMenu
         var rooms = new List<RoomModel>();
 
         await using (var cmd = _database.CreateCommand(
-                         @"SELECT * FROM rooms WHERE acommondation = @acommondation AND id NOT IN (SELECT room FROM bookings WHERE booking_end >= current_date)"))
+                         $"SELECT * FROM rooms WHERE acommondation = {acommondation} AND id NOT IN (SELECT room FROM bookings WHERE booking_end >= current_date)"))
         {
             cmd.Parameters.AddWithValue("acommondation", acommondation);
             await using (var reader = await cmd.ExecuteReaderAsync())
