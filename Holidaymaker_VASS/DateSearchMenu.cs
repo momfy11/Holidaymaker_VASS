@@ -27,7 +27,7 @@ public class DateSearchMenu
                 {
                     if(1 <= day && day <= 31)
                     {
-                        if (DateTime.TryParse($"{day} {months[Int32.Parse(inputMonth) - 1]} 12:00", out var date))
+                        if (DateTime.TryParse($"{day} {months[Int32.Parse(inputMonth) - 1]} 13:00", out var date))
                         {
                             startDate = date;
                         }
