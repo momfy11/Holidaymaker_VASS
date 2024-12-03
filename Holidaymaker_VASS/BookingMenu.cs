@@ -24,7 +24,7 @@ public class BookingMenu
             Console.WriteLine("\nBooking Menu");
             Console.WriteLine("1. Select User(Account)");
             Console.WriteLine("9. Exit to Main Menu");
-            Console.Write("Choose An Option");
+            Console.WriteLine("Choose An Option");
             string? option = Console.ReadLine();
 
             switch (option)
@@ -67,7 +67,24 @@ public class BookingMenu
             return;
         }
         var selectedUser = users[userIndex -1];
+
+        //Booking Start
+        Console.WriteLine("\nEnter the booking start date (YYYY-MM-DD): ");
+        if (!DateTime.TryParse(Console.ReadLine(), out DateTime bookingStart) ||
+            bookingStart < new DateTime(2024, 12, 1) || bookingStart > new DateTime(2025, 1, 31))
+        {
+            Console.WriteLine("Invalid Booking Start Date. It must be between 2024-12-01 and 2025-01-31.");
+            return;
+        }
         
+        //Booking End
+        Console.WriteLine("Enter the booking end date (YYYY-MM-DD): ");
+        if (!DateTime.TryParse(Console.ReadLine(), out DateTime bookingEnd) || bookingEnd <= bookingStart ||
+            bookingEnd > new DateTime(2025, 1, 31))
+        {
+            Console.WriteLine("Invalid Booking End Date. It must be after Start Date and no later then 2025-01-31.");
+            return;
+        }
         
         // Make new Guests
         Console.Write("How many guests? ");
@@ -233,7 +250,7 @@ public class BookingMenu
         
         // Insert Booking
         Console.WriteLine($"\nCreating Booking (Your Room Number: {selectedRoom.RoomId}, Price: {totalPrice}");
-        await InsertBookingAsync(selectedRoom.RoomId, DateTime.Now, DateTime.Now.AddDays(7), selectedUser.AccountId,
+        await InsertBookingAsync(selectedRoom.RoomId, bookingStart, bookingEnd, selectedUser.AccountId,
             totalPrice);
         
         foreach (var guest in guests)
