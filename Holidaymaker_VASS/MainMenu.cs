@@ -1,29 +1,30 @@
+using Npgsql;
+
 namespace app;
 class MainMenu
 {
 
-    public static void Menu()
+    public static async Task Menu(CreateUser createUser, NpgsqlDataSource dataSource)
     {
         bool showMenu = true;
 
-        Console.WriteLine("Main Menu!");
-        Console.WriteLine("1) Create User");
-        Console.WriteLine("2) Create Booking");
-        Console.WriteLine("3) Edit Booking");
-        Console.WriteLine("4) View Booking");
-        Console.WriteLine("5) History");
-        Console.WriteLine("9) Quit");
-
-
         while (showMenu)
         {
+            Console.WriteLine("Main Menu!");
+            Console.WriteLine("1) Create User");
+            Console.WriteLine("2) Create Booking");
+            Console.WriteLine("3) Edit Booking");
+            Console.WriteLine("4) View Booking");
+            Console.WriteLine("5) History");
+            Console.WriteLine("9) Quit");
+            
             string mainoption = Console.ReadLine();
 
             switch (mainoption)
             {
                 case "1":
-                    //CreateUser();
-                    Console.WriteLine("Creating a user"); // ta bort när vi har en create user method
+                    int addressId = await createUser.AddAdress();
+                    await createUser.AddUser(addressId);
                     break;
                 case "2":
                     //CreateBooking();
@@ -34,8 +35,8 @@ class MainMenu
                     Console.WriteLine("editing a booking"); // ta bort när vi har en edit booking method
                     break;
                 case "4":
-                    //ViewBooking();
-                    Console.WriteLine("Viewing a booking"); // ta bort när vi har en view booking method
+                    var viewBookings = new ViewBookings(dataSource);
+                    await viewBookings.ShowBookings();
                     break;
                 case "5":
                     //History();
