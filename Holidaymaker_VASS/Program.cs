@@ -6,9 +6,9 @@ namespace app;
    {
        static async Task Main(string[] args)
        {
-           // Initialize the database connection
+          
            Database database = new Database();
-           var dataSource = database.Connection(); // Get the NpgsqlDataSource object
+           var dataSource = database.Connection();
    
           
            await MainMenu.Menu(dataSource);
