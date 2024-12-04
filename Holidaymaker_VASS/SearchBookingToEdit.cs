@@ -40,24 +40,7 @@ public class SearchBookingToEdit
             }
         }
     }
-
-    public async void RemoveBooking(int id)
-    {
-        await using (var cmd2 = _database.CreateCommand("DELETE FROM bookingsxextras where booking_id = $1"))
-        {
-            cmd2.Parameters.AddWithValue(id);
-            int result = await cmd2.ExecuteNonQueryAsync();
-            Console.WriteLine(result);
-        }
-        
-        await using (var cmd = _database.CreateCommand("DELETE FROM bookings WHERE id = $1"))
-        {
-            cmd.Parameters.AddWithValue(id);
-            int result = await cmd.ExecuteNonQueryAsync();
-            Console.WriteLine(result);
-        }
-    }
-
+    
     public async Task SelectUserToEdit()
     {
         #region old-Code
@@ -129,8 +112,7 @@ public class SearchBookingToEdit
 
         await ManageExtrasForBooking(selectedBooking.Id);
     }
-
-
+    
     private async Task ManageExtrasForBooking(int bookingId)
     {
         bool isEditing = true;
@@ -231,7 +213,7 @@ public class SearchBookingToEdit
 
         var selectedExtra = currentExtras[extraIndex - 1];
         await using (var cmd = _database.CreateCommand(
-                         $"DELETE FROM bookingsxextras WHERE booking_id = {bookingId} AND extras_id = $1"))
+                         "DELETE FROM bookingsxextras WHERE booking_id = $1 AND extras_id = $2"))
         {
             cmd.Parameters.AddWithValue(bookingId);
             cmd.Parameters.AddWithValue(selectedExtra.ExtraId);
@@ -241,8 +223,6 @@ public class SearchBookingToEdit
         }
     }
     
-    
-
     private async Task<List<BookingsModel>> GetAllBookingsAsync()
     {
         var bookings = new List<BookingsModel>();
@@ -286,21 +266,38 @@ public class SearchBookingToEdit
     private async Task<List<ExtraModel>> GetBookingsXExtrasAsync(int bookingId)
     {
         var extras = new List<ExtraModel>();
-        await using (var cmd = _database.CreateCommand($"SELECT * FROM bookingsxextras JOIN extras ON extras_id = id WHERE booking_id = {bookingId}"))
+
+        try
         {
-            cmd.Parameters.AddWithValue(bookingId);
-            await using (var reader = await cmd.ExecuteReaderAsync())
+            await using (var cmd = _database.CreateCommand(
+                             @"SELECT extras.id, extras.name, extras.price 
+                            FROM bookingsxextras 
+                            INNER JOIN extras ON bookingsxextras.extras_id = extras.id 
+                            WHERE bookingsxextras.booking_id = @bookingId"))
             {
-                while (await reader.ReadAsync())
+                cmd.Parameters.AddWithValue("@bookingId", bookingId);
+
+                await using (var reader = await cmd.ExecuteReaderAsync())
                 {
-                    extras.Add(new ExtraModel
+                    while (await reader.ReadAsync())
                     {
-                        ExtraId = reader.GetInt32(0),
-                        Name = reader.GetString(1),
-                        Price = reader.GetInt32(2)
-                    });
+                        extras.Add(new ExtraModel
+                        {
+                            ExtraId = reader.GetInt32(reader.GetOrdinal("id")),
+                            Name = reader.GetString(reader.GetOrdinal("name")),
+                            Price = reader.GetInt32(reader.GetOrdinal("price"))
+                        });
+                    }
                 }
             }
+        }
+        catch (NpgsqlException npgEx)
+        {
+            Console.WriteLine($"Database error: {npgEx.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
 
         return extras;
