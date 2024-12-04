@@ -33,7 +33,7 @@ public class SearchRoom
                     await SearchByDate();
                     break;
                 case "2":
-                    Console.WriteLine("WIP");
+                    await SearchRoomByAccommodation();
                     break;
                 case "3":
                     Console.WriteLine("WIP");
