@@ -1,7 +1,7 @@
 ﻿using Npgsql;
 
-namespace app
-{
+namespace app;
+
     public class ViewBookings
     {
         private readonly NpgsqlDataSource _database;
@@ -79,4 +79,4 @@ namespace app
             }
         }
     }
-}   
+   

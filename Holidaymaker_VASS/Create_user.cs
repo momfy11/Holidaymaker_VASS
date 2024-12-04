@@ -149,14 +149,3 @@ public class CreateUser
 
 
 
-/*
-
-
-NEDAN KOD BEHÖVER SÄTTAS IN I MENYN FÖR ATT SKAPA ANVÄNDARE
-
-    var createUser = new CreateUser(database.Connection());
-    
-    int addressId = await createUser.AddAdress();
-    await createUser.AddUser(addressId);
-
-*/

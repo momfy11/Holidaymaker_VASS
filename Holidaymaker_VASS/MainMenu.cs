@@ -7,11 +7,13 @@ class MainMenu
     public static async Task Menu(NpgsqlDataSource dataSource)
     {
         Database database = new Database();
-        var createUser = new CreateUser(database.Connection());
-        var bookingMenu = new BookingMenu(database.Connection());
-        var searchBooking = new SearchBookingToEdit(database.Connection());
-        Accommodation accommodation = new(database.Connection());
-        SearchBookingToEdit searchBookingToEdit = new(database.Connection());
+        var createUser = new CreateUser(dataSource);
+        var bookingMenu = new BookingMenu(dataSource);
+        var viewBookings = new ViewBookings(dataSource);
+        var accommodation = new Accommodation(database.Connection());
+        var searchBookingToEdit = new SearchBookingToEdit(database.Connection());
+        var searchRoom = new SearchRoom(dataSource);
+        var accommodationMenu = new AccommodationMenu(accommodation);
         
         bool showMenu = true;
 
@@ -34,23 +36,27 @@ class MainMenu
                     int addressId = await createUser.AddAdress();
                     await createUser.AddUser(addressId);
                     break;
+                
                 case "2":
                     await bookingMenu.BookingsMenu();
                     break;
+                
                 case "3":
                     await searchBookingToEdit.EditBookingsMenu();
                     break;
+                
                 case "4":
-                    var viewBookings = new ViewBookings(dataSource);
                     await viewBookings.ShowBookings();
                     break;
+                
                 case "5":
-                    
+                    await searchRoom.RoomMenu();
                     break;
+                
                 case "6":
-                    var accommodationMenu = new AccommodationMenu(accommodation);
                     await accommodationMenu.Menu();
                     break;
+                
                 case "9":
                     showMenu = false;
                     break;
