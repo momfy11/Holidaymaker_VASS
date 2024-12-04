@@ -29,8 +29,8 @@ public class Accommodation
                     {
                         AddressId = addressReader.GetInt32(0),
                         Street = addressReader.GetString(1),
-                        StreetNr = addressReader.GetInt32(2),
-                        Zipcode = addressReader.GetInt32(3),
+                        StreetNr = addressReader.GetString(2),
+                        Zipcode = addressReader.GetString(3),
                         City = addressReader.GetString(4),
                         Country = addressReader.GetString(5)
                     };
