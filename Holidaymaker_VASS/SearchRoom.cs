@@ -22,7 +22,7 @@ public class SearchRoom
             Console.WriteLine("2) Search by Accommodation ");
             Console.WriteLine("3) Search by Distance to Centrum");
             Console.WriteLine("4) Search by Distance to Beach");
-            Console.WriteLine("5) Search by Distance to Centrum");
+            Console.WriteLine("5) Search by utilitys");
             Console.WriteLine("9) Return");
             
             string roomoption = Console.ReadLine();
@@ -33,7 +33,7 @@ public class SearchRoom
                     await SearchByDate();
                     break;
                 case "2":
-                    Console.WriteLine("WIP");
+                    await SearchRoomByAccommodation();
                     break;
                 case "3":
                     Console.WriteLine("WIP");
