@@ -48,6 +48,7 @@ public class BookingMenu
     private async Task SelectUserAndBook()
     {
         //Select User
+        #region Select User
         Console.WriteLine("\nGetting Users(Accounts) from database");
         var users = await GetUsersAsync();
 
@@ -69,8 +70,10 @@ public class BookingMenu
             return;
         }
         var selectedUser = users[userIndex -1];
-
+        #endregion
+        
         //Booking Start
+        #region Booking
         Console.WriteLine("\nEnter the booking start date (YYYY-MM-DD): ");
         if (!DateTime.TryParse(Console.ReadLine() + " 15:00:00", out DateTime bookingStart) ||
             bookingStart < new DateTime(2024, 12, 1) || bookingStart > new DateTime(2025, 1, 31))
@@ -87,8 +90,10 @@ public class BookingMenu
             Console.WriteLine("Invalid Booking End Date. It must be after Start Date and no later then 2025-01-31.");
             return;
         }
-        
+        #endregion
+
         // Make new Guests
+        #region Guests
         Console.Write("How many guests? ");
         if (!int.TryParse(Console.ReadLine(), out int guestCount) || guestCount < 1)
         {
@@ -136,9 +141,10 @@ public class BookingMenu
         {
             Console.WriteLine($"Name: {guest.FirstName} {guest.LastName}, Date of Birth: {guest.Date_Of_Birth}");
         }
-        
-        
+        #endregion
+
         //Select Accommodation
+        #region Accommodation
         Console.WriteLine("\nFetching Accommodations..");
         var accommodations = await GetAccommodationsAsync();
         if (!accommodations.Any())
@@ -160,8 +166,10 @@ public class BookingMenu
             return;
         }
         var selectedAccommodation = accommodations[accommodationIndex - 1];
-        
-        // Select Room
+        #endregion
+
+        //Select Room
+        #region Select Room
         Console.WriteLine("\nFetching Rooms...");
         var availableRooms = await GetAvailableRoomsAsync(selectedAccommodation.Id);
 
@@ -190,8 +198,10 @@ public class BookingMenu
         Console.WriteLine($"    Size: {selectedRoom.Size}");
         Console.WriteLine($"    Capacity: {selectedRoom.Capacity}");
         Console.WriteLine($"    Price: {selectedRoom.Price}");
-        
+        #endregion
+
         //Select Extras
+        #region Extras
         var extras = await GetExtrasAsync();
         Console.WriteLine("\nChoose Extra: ");
         var selectedExtras = new List<ExtraModel>();
@@ -246,6 +256,7 @@ public class BookingMenu
                     Console.WriteLine($"    - {sExtra.Name} (Price: {sExtra.Price}).");
             }
         }
+        #endregion
         
         // Calculate Total Price
         int totalPrice = selectedRoom.Price + selectedExtras.Sum(e => e.Price);

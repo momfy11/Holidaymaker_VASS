@@ -10,8 +10,8 @@ class MainMenu
         var createUser = new CreateUser(dataSource);
         var bookingMenu = new BookingMenu(dataSource);
         var viewBookings = new ViewBookings(dataSource);
-        var accommodation = new Accommodation(database.Connection());
-        var searchBookingToEdit = new SearchBookingToEdit(database.Connection());
+        var accommodation = new Accommodation(dataSource);
+        var searchBookingToEdit = new SearchBookingToEdit(dataSource);
         var searchRoom = new SearchRoom(dataSource);
         var accommodationMenu = new AccommodationMenu(accommodation);
         
