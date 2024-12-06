@@ -71,7 +71,7 @@ public class SearchRoomByCentrum
         }
 
 
-        startDate = startDate.Date.AddHours(13);
+        startDate = startDate.Date.AddHours(15);
         endDate = endDate.Date.AddHours(10);
 
 

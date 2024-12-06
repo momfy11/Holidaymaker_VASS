@@ -27,10 +27,9 @@ public class SearchRoom
             
             Console.WriteLine("Room Menu!");
             Console.WriteLine("1) Search by Date");
-            Console.WriteLine("2) Search by Accommodation ");
+            Console.WriteLine("2) Search by Accommodation Rating ");
             Console.WriteLine("3) Search by Distance to Centrum");
             Console.WriteLine("4) Search by Distance to Beach");
-            Console.WriteLine("5) Search by utilitys");
             Console.WriteLine("9) Return");
             
             string option = Console.ReadLine();
@@ -41,16 +40,17 @@ public class SearchRoom
                     await searchRoomByDate.SearchByDate();
                     break;
                 case "2":
-                    await searchRoomByAccommodation.SearchByAccommodation();
+                    var (accommodationId, startDate, endDate) = await searchRoomByAccommodation.ShowAccommodationByRating();
+                    if (accommodationId != null)
+                    {
+                        await searchRoomByAccommodation.ShowFreeRoomsByAccommodation(accommodationId.Value, startDate, endDate);
+                    }
                     break;
                 case "3":
                     await searchRoomByCentrum.SortCentrumSearch();
                     break;
                 case "4":
                     await searchRoomByBeach.SortBeachSearch();
-                    break;
-                case "5":
-                    Console.WriteLine("WIP");
                     break;
                 case "9":
                     showMenu = false;
