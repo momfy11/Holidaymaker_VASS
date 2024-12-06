@@ -39,8 +39,6 @@ public class AccommodationMenu
                     _accommodationService.PrintAccommondationFeatures(accommodations);
                     break;
                 
-                
-                
                 case "4":
                     Console.WriteLine("Enter the Accommodation to find Ratings: ");
                     if (int.TryParse(Console.ReadLine(), out int accommodationId))
@@ -52,8 +50,6 @@ public class AccommodationMenu
                         Console.WriteLine("Invalid ID. Please try again with a valid Number.");
                     }
                     break;
-                
-                
                 
                 case "5":
                     Console.WriteLine("Enter a feature you want to search for (e.g., 'Pool', 'Gym', 'Resturant')");
@@ -139,7 +135,6 @@ public class AccommodationMenu
                     Console.WriteLine("Disable Accommodations Menu.");
                     isRunning = false;
                     break;
-                
                 
                 default:
                     Console.WriteLine("Invalid option. Please select a valid number (1-3).");
