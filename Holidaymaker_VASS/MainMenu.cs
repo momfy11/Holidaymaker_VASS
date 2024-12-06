@@ -15,6 +15,7 @@ class MainMenu
         var searchRoom = new SearchRoom(dataSource);
         var accommodationMenu = new AccommodationMenu(accommodation);
         
+        
         bool showMenu = true;
 
         while (showMenu)
@@ -33,8 +34,7 @@ class MainMenu
             switch (mainoption)
             {
                 case "1":
-                    int addressId = await createUser.AddAdress();
-                    await createUser.AddUser(addressId);
+                    await createUser.CreateUserMenu();
                     break;
                 
                 case "2":
